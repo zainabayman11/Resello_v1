@@ -8,8 +8,15 @@ from clip_utils import clip_product_check
 from gemini_utils import verify_same_device_with_gemini, analyze_damage_with_gemini
 
 def render():
-    st.title("📸 Upload Product Photos")
-    st.markdown(f"**Product:** {st.session_state.product_name} | **Category:** {st.session_state.product_type}")
+    st.title("📸 Photo Upload & Validation")
+    st.markdown(f"**Device:** {st.session_state.product_name} | **Category:** {st.session_state.product_type}")
+
+    # Back button to return to info page
+    if st.button("⬅️ Back to Product Info", use_container_width=False):
+        st.session_state.step = 1
+        st.rerun()
+    
+    st.divider()
 
     inspection = st.session_state.inspection
     all_valid = True
@@ -33,7 +40,7 @@ def render():
                     ok, reasons, info = get_cached_validation(b, view, st.session_state.product_type)
                 
                 if ok:
-                    st.success(f"✅ View verified! (Confidence: {info.get('margin', 0):.2f})")
+                    st.success("✅ View verified!")
                 else:
                     all_valid = False
                     st.error(f"❌ Validation failed:")
@@ -46,7 +53,10 @@ def render():
         
         st.divider()
 
-    if st.button("Analyze with Gemini AI 🤖", disabled=not all_valid):
+    # Dynamic button name as requested
+    analyze_btn_label = "Generate Analysis"
+    
+    if st.button(analyze_btn_label, disabled=not all_valid, type="primary"):
         st.info("Running consistency checks...")
         
         duplicates = find_duplicates(st.session_state.uploaded_files)

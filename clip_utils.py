@@ -22,7 +22,7 @@ from config import (
 )
 
 # ---------------- Load CLIP ----------------
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_clip():
     """Load and cache CLIP model"""
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
@@ -62,6 +62,7 @@ def clip_product_check(uploaded_files, selected_category):
     rejected, votes, per_view = [], [], {}
 
     for view, file in uploaded_files.items():
+        file.seek(0)
         img = Image.open(file).convert("RGB")
         logits, probs = clip_logits(img, CLIP_PRODUCT_LABELS)
 

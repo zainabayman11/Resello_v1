@@ -113,10 +113,10 @@ def get_cached_validation(file_bytes, view_name, product_type):
     is_blur, score, level = is_blurry(f, product_type)
 
     if is_blur:
-        return False, [f"Image too blurry ({level}, score={score:.1f})"], {}
+        return False, [f"Image too blurry ({level})"], {}
 
     if level == "borderline":
-        st.warning(f"⚠️ Borderline sharpness (score={score:.1f}) — accepted")
+        st.warning(f"⚠️ Borderline sharpness — accepted")
     
     v_ok, v_reasons, v_info = clip_view_check(f, view_name)
     if not v_ok:

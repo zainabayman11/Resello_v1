@@ -275,6 +275,12 @@ Your task is to write a final, polished, and persuasive report for a seller base
 
 ### INSTRUCTIONS:
 Write a professional, human-friendly summary in both Arabic and English. 
+Use the following markers to separate them:
+[ARABIC]
+(Your Arabic report here)
+[ENGLISH]
+(Your English report here)
+
 1. Acknowledge the device model and its age.
 2. Summarize the physical state (mentioning specific scratches, wear, or pristine condition).
 3. Explain the price deduction logically (Market age + specific cosmetic issues).
