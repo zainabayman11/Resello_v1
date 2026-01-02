@@ -28,7 +28,10 @@ if "analysis_results" not in st.session_state:
     st.session_state.analysis_results = {}
 if "gemini_api_key" not in st.session_state:
     # Use environment variable if available, otherwise default fallback
-    st.session_state.gemini_api_key = os.getenv("GOOGLE_API_KEY", "")
+    st.session_state.gemini_api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyAClbhjaM_axp7zMWc3dOiKrrvzCT-uw48")
+if "serpapi_key" not in st.session_state:
+    # Use environment variable if available, otherwise default fallback
+    st.session_state.serpapi_key = os.getenv("SERPAPI_KEY", "84fe30f2dd187c0e37fce6d2397a53d442ceded2cf3c94434facdc1c8b6dcfa2")
 
 # ---------------- Main Navigation ----------------
 def main():

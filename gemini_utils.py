@@ -229,3 +229,63 @@ Return the answer as plain text (no JSON required)."""
         return text if text else "(No response from Gemini)"
     except Exception as e:
         return f"Gemini Error: {str(e)}"
+
+# ---------------- Gemini AI Price Report ----------------
+def generate_ai_price_report(product_name, product_type, usage_years, price_calc_results, special_api_key=None):
+    """
+    Use Gemini 1.5 Flash to generate a professional pricing summary using a custom API key
+    """
+    try:
+        # If a special key is provided, reconfigure temporarily
+        if special_api_key:
+            genai.configure(api_key=special_api_key)
+            
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        
+        base_price = price_calc_results["base_price"]
+        final_price = price_calc_results["final_price"]
+        age_rate = price_calc_results["age_depreciation"]["rate"] * 100
+        defect_rate = price_calc_results["defect_depreciation"]["rate"] * 100
+        
+        issues_summary = []
+        for issue in price_calc_results["defect_depreciation"]["breakdown"]:
+            issues_summary.append(f"- {issue['type']} ({issue['severity']}): {issue['description']}")
+            
+        issues_text = "\n".join(issues_summary) if issues_summary else "No major physical defects detected."
+
+        prompt = f"""
+You are a senior professional physical condition inspector and pricing expert for a high-end re-commerce platform named "Resello".
+Your task is to write a final, polished, and persuasive report for a seller based on our AI inspection and market analysis.
+
+### PRODUCT DETAILS:
+- Product: {product_name}
+- Category: {product_type}
+- Usage Duration: {usage_years} years
+
+### PRICE ANALYSIS:
+- Brand New Market Price: {base_price:,.0f} EGP
+- Final Suggested Resale Price: {final_price:,.0f} EGP
+
+### DEPRECIATION BREAKDOWN:
+- Age-based Deduction: {age_rate:.0f}%
+- Physical Condition Deduction: {defect_rate:.0f}%
+
+### DETECTED ISSUES:
+{issues_text}
+
+### INSTRUCTIONS:
+Write a professional, human-friendly summary in both Arabic and English. 
+1. Acknowledge the device model and its age.
+2. Summarize the physical state (mentioning specific scratches, wear, or pristine condition).
+3. Explain the price deduction logically (Market age + specific cosmetic issues).
+4. Provide a final confident verdict on why this price is fair for both the seller and the buyer.
+5. Keep it premium, helpful, and trustworthy.
+
+Use professional markdown formatting with clear headings. Use emojis sparingly but effectively.
+"""
+
+        response = model.generate_content([prompt])
+        return response.text.strip()
+    except Exception as e:
+        return f"Error generating AI report: {str(e)}"
+
